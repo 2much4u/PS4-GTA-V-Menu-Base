@@ -29,7 +29,6 @@ Menu::Menu(Function mainSubmenu) {
 	bannerTextColor = { 255, 255, 255, 255 };
 
 	instructionsColor = { 0, 0, 0, 80 };
-	instructionsTextColor = { 255, 255, 255, 0 };
 }
 
 void Menu::playSound(char* sound) {

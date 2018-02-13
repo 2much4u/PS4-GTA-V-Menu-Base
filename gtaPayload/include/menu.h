@@ -92,8 +92,7 @@ public:
 		bodyColor,
 		scrollerColor,
 		indicatorColor,
-		instructionsColor,
-		instructionsTextColor;
+		instructionsColor;
 
 	Menu();
 	Menu(Menu& menu);
