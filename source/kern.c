@@ -45,7 +45,7 @@ int kernelPayload(struct thread *td, void* uap) {
 
 	void *td_ucred = *(void **)(((char *)td) + 304); // p_ucred == td_ucred
 
-	// sceSblACMgrIsSystemUcred
+													 // sceSblACMgrIsSystemUcred
 	uint64_t *sonyCred = (uint64_t *)(((char *)td_ucred) + 96);
 	*sonyCred = 0xffffffffffffffff;
 
@@ -53,17 +53,16 @@ int kernelPayload(struct thread *td, void* uap) {
 	uint64_t *sceProcType = (uint64_t *)(((char *)td_ucred) + 88);
 	*sceProcType = 0x3801000000000013; // Max access
 
-	// sceSblACMgrHasSceProcessCapability
+									   // sceSblACMgrHasSceProcessCapability
 	uint64_t *sceProcCap = (uint64_t *)(((char *)td_ucred) + 104);
 	*sceProcCap = 0xffffffffffffffff; // Sce Process
 
-	// Disable write protection
+									  // Disable write protection
 	uint64_t cr0 = readCr0();
 	writeCr0(cr0 & ~X86_CR0_WP);
 
-	// Disable ptrace checks
-	ptrKernel[KERN_PTRACE_CHECK_1] = 0xEB;
-	*(uint16_t*)&ptrKernel[KERN_PTRACE_CHECK_2] = 0x27EB;
+	// Disable ptrace check
+	ptrKernel[KERN_PTRACE_CHECK] = 0xEB;
 
 	// Disable process aslr
 	*(uint16_t*)&ptrKernel[KERN_PROCESS_ASLR] = 0x9090;

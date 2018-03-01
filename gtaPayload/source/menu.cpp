@@ -58,9 +58,9 @@ void Menu::monitorButtons() {
 				open = false;
 			}
 			else {
-				currentMenu = lastSubmenu[submenuLevel - 1];
-				currentOption = lastOption[submenuLevel - 1];
 				submenuLevel--;
+				currentMenu = lastSubmenu[submenuLevel];
+				currentOption = lastOption[submenuLevel];
 				if (colorEditing) {
 					colorEditing = false;
 				}
