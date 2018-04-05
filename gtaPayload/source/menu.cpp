@@ -83,16 +83,16 @@ void Menu::monitorButtons() {
 			}
 			playSound("NAV_UP_DOWN");
 		}
-		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, Button_Dpad_Right)) {
+		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, Button_Dpad_Right_2)) {
 			rightPress = true;
 		}
-		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, Button_Dpad_Left)) {
+		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, Button_Dpad_Left_2)) {
 			leftPress = true;
 		}
-		else if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, Button_Dpad_Right)) {
+		else if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, Button_Dpad_Right_2)) {
 			rightHold = true;
 		}
-		else if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, Button_Dpad_Left)) {
+		else if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, Button_Dpad_Left_2)) {
 			leftHold = true;
 		}
 		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, Button_Square)) {
@@ -104,7 +104,7 @@ void Menu::monitorButtons() {
 		}
 	}
 	else {
-		if (CONTROLS::IS_CONTROL_JUST_PRESSED(0, Button_Dpad_Right) && CONTROLS::IS_CONTROL_JUST_PRESSED(0, Button_Square)) {
+		if (CONTROLS::IS_CONTROL_JUST_PRESSED(0, Button_Dpad_Right_2) && CONTROLS::IS_CONTROL_JUST_PRESSED(0, Button_Square)) {
 			open = true;
 			optionPress = false;
 			submenuLevel = 0;
