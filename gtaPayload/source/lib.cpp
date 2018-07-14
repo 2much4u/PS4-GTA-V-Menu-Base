@@ -1,6 +1,6 @@
 #include "lib.h"
 
-u64(*syscall)(int num, ...) = (void*)0x2B9D28C;
+u64 (*syscall)(int num, ...) = (void*)0x31B616C;
 #define resolve(module, name) syscall(591, module, #name, &name);
 
 void *(*malloc)(size_t size);
@@ -29,6 +29,7 @@ double(*atof)(const char * str);
 void resolveLibs() {
 	int libcHandle;
 	syscall(594, "libSceLibcInternal.sprx", 0, &libcHandle, 0);
+
 	resolve(libcHandle, malloc);
 	resolve(libcHandle, free);
 	resolve(libcHandle, calloc);
