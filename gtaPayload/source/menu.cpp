@@ -39,21 +39,21 @@ void Menu::playSound(char* sound) {
 
 void Menu::monitorButtons() {
 	if (open) {
-		CONTROLS::DISABLE_CONTROL_ACTION(0, Button_Dpad_Up, true);
-		CONTROLS::DISABLE_CONTROL_ACTION(0, Button_Dpad_Down, true);
-		CONTROLS::DISABLE_CONTROL_ACTION(0, Button_Dpad_Right, true);
-		CONTROLS::DISABLE_CONTROL_ACTION(0, Button_Dpad_Left, true);
-		CONTROLS::DISABLE_CONTROL_ACTION(0, Button_Dpad_Right_2, true);
-		CONTROLS::DISABLE_CONTROL_ACTION(0, Button_Dpad_Left_2, true);
-		CONTROLS::DISABLE_CONTROL_ACTION(0, Button_Circle, true);
-		CONTROLS::DISABLE_CONTROL_ACTION(0, Button_X, true);
-		CONTROLS::SET_INPUT_EXCLUSIVE(0, Button_Cirlce_2);
-		CONTROLS::SET_INPUT_EXCLUSIVE(0, Button_Dpad_Right);
-		CONTROLS::SET_INPUT_EXCLUSIVE(0, Button_Dpad_Left);
+		CONTROLS::DISABLE_CONTROL_ACTION(0, INPUT_FRONTEND_UP, true);
+		CONTROLS::DISABLE_CONTROL_ACTION(0, INPUT_FRONTEND_DOWN, true);
+		CONTROLS::DISABLE_CONTROL_ACTION(0, INPUT_FRONTEND_RIGHT, true);
+		CONTROLS::DISABLE_CONTROL_ACTION(0, INPUT_FRONTEND_LEFT, true);
+		CONTROLS::DISABLE_CONTROL_ACTION(0, INPUT_FRONTEND_ACCEPT, true);
+		CONTROLS::DISABLE_CONTROL_ACTION(0, INPUT_FRONTEND_CANCEL, true);
+		CONTROLS::DISABLE_CONTROL_ACTION(0, INPUT_FRONTEND_X, true);
+		CONTROLS::SET_INPUT_EXCLUSIVE(0, INPUT_FRONTEND_UP);
+		CONTROLS::SET_INPUT_EXCLUSIVE(0, INPUT_FRONTEND_RIGHT);
+		CONTROLS::SET_INPUT_EXCLUSIVE(0, INPUT_FRONTEND_LEFT);
+		CONTROLS::SET_INPUT_EXCLUSIVE(0, INPUT_FRONTEND_CANCEL);
 
 		optionPress = leftPress = rightPress = leftHold = rightHold = upPress = downPress = squarePress = false;
 
-		if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, Button_Circle)) {
+		if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_CANCEL)) {
 			if (currentMenu == mainMenu) {
 				open = false;
 			}
@@ -67,7 +67,7 @@ void Menu::monitorButtons() {
 			}
 			playSound("BACK");
 		}
-		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, Button_Dpad_Up)) {
+		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_UP)) {
 			upPress = true;
 			currentOption--;
 			if (currentOption < 1) {
@@ -75,7 +75,7 @@ void Menu::monitorButtons() {
 			}
 			playSound("NAV_UP_DOWN");
 		}
-		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, Button_Dpad_Down)) {
+		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_DOWN)) {
 			downPress = true;
 			currentOption++;
 			if (currentOption > optionCount) {
@@ -83,28 +83,28 @@ void Menu::monitorButtons() {
 			}
 			playSound("NAV_UP_DOWN");
 		}
-		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, Button_Dpad_Right_2)) {
+		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_RIGHT)) {
 			rightPress = true;
 		}
-		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, Button_Dpad_Left_2)) {
+		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_LEFT)) {
 			leftPress = true;
 		}
-		else if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, Button_Dpad_Right_2)) {
+		else if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_RIGHT)) {
 			rightHold = true;
 		}
-		else if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, Button_Dpad_Left_2)) {
+		else if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_LEFT)) {
 			leftHold = true;
 		}
-		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, Button_Square)) {
+		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_X)) {
 			squarePress = true;
 		}
-		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, Button_X)) {
+		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_ACCEPT)) {
 			optionPress = true;
 			playSound("SELECT");
 		}
 	}
 	else {
-		if (CONTROLS::IS_CONTROL_JUST_PRESSED(0, Button_Dpad_Right_2) && CONTROLS::IS_CONTROL_JUST_PRESSED(0, Button_Square)) {
+		if (CONTROLS::IS_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_RIGHT) && CONTROLS::IS_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_X)) {
 			open = true;
 			optionPress = false;
 			submenuLevel = 0;
