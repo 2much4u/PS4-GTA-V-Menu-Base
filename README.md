@@ -46,9 +46,10 @@ Then, from this repository:
 ```bash
 # Build the payload
 docker compose run --rm builder make -C libPS4
+docker compose run --rm builder make
 
 # Clean the build directory
-docker compose run --rm builder make clean -C libPS4
+docker compose run --rm builder make clean
 ```
 
 The resulting `*.bin` payload will be placed at the root of the repository.
