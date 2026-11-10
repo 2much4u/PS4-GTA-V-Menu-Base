@@ -46,7 +46,9 @@ void Menu::monitorButtons() {
 		CONTROLS::DISABLE_CONTROL_ACTION(0, INPUT_FRONTEND_ACCEPT, true);
 		CONTROLS::DISABLE_CONTROL_ACTION(0, INPUT_FRONTEND_CANCEL, true);
 		CONTROLS::DISABLE_CONTROL_ACTION(0, INPUT_FRONTEND_X, true);
+
 		CONTROLS::SET_INPUT_EXCLUSIVE(0, INPUT_FRONTEND_UP);
+		CONTROLS::SET_INPUT_EXCLUSIVE(0, INPUT_FRONTEND_DOWN);
 		CONTROLS::SET_INPUT_EXCLUSIVE(0, INPUT_FRONTEND_RIGHT);
 		CONTROLS::SET_INPUT_EXCLUSIVE(0, INPUT_FRONTEND_LEFT);
 		CONTROLS::SET_INPUT_EXCLUSIVE(0, INPUT_FRONTEND_CANCEL);
@@ -89,12 +91,12 @@ void Menu::monitorButtons() {
 		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_LEFT)) {
 			leftPress = true;
 		}
-		else if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_RIGHT)) {
+		/*else if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_RIGHT)) {
 			rightHold = true;
 		}
 		else if (CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_LEFT)) {
 			leftHold = true;
-		}
+		}*/
 		else if (CONTROLS::IS_DISABLED_CONTROL_JUST_PRESSED(0, INPUT_FRONTEND_X)) {
 			squarePress = true;
 		}
@@ -120,6 +122,7 @@ void Menu::drawText(char* text, Vector2 pos, float scale, Font font, Color color
 	UI::SET_TEXT_WRAP(0.0f, 1.0f);
 	UI::SET_TEXT_DROPSHADOW(0, 0, 0, 0, 0);
 	UI::SET_TEXT_FONT(font);
+
 	if (outline) {
 		UI::SET_TEXT_OUTLINE();
 	}
@@ -130,6 +133,7 @@ void Menu::drawText(char* text, Vector2 pos, float scale, Font font, Color color
 		UI::SET_TEXT_RIGHT_JUSTIFY(true);
 		UI::SET_TEXT_WRAP(0.0f, pos.x);
 	}
+
 	UI::SET_TEXT_SCALE(scale, scale);
 	UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 	UI::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(text);
@@ -152,6 +156,7 @@ void Menu::setupInstructions() {
 	GRAPHICS::DRAW_SCALEFORM_MOVIE_FULLSCREEN(instructionsHandle, 255, 255, 255, 0);
 	GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(instructionsHandle, "CLEAR_ALL");
 	GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
+
 	GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(instructionsHandle, "SET_CLEAR_SPACE");
 	GRAPHICS::_ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_INT(200);
 	GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
@@ -168,7 +173,9 @@ void Menu::addInstruction(ScaleformSymbol symbol, char* text) {
 	GRAPHICS::_ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_INT(instructionCount);
 	GRAPHICS::_ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_INT(symbol);
 	GRAPHICS::BEGIN_TEXT_COMMAND_SCALEFORM_STRING("STRING");
+	
 	UI::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(text);
+	
 	GRAPHICS::END_TEXT_COMMAND_SCALEFORM_STRING();
 	GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
 
@@ -177,6 +184,7 @@ void Menu::addInstruction(ScaleformSymbol symbol, char* text) {
 void Menu::finishInstructions() {
 	GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(instructionsHandle, "DRAW_INSTRUCTIONAL_BUTTONS");
 	GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
+
 	GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(instructionsHandle, "SET_BACKGROUND_COLOUR");
 	GRAPHICS::_ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_INT(instructionsColor.r);
 	GRAPHICS::_ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_INT(instructionsColor.g);
@@ -454,6 +462,7 @@ Menu& Menu::scroller(float *f, float min, float max, float increment, int decima
 		sprintf(buffer2, buffer1, *f);
 		return data(buffer2);
 	}
+
 	return data(*f, decimalPlaces);
 }
 Menu& Menu::scroller(char** textArray, int* index, int numItems, bool fast) {
@@ -515,6 +524,7 @@ Menu& Menu::scroller(Font* font) {
 			*font = (Font)fontID;
 		}
 	}
+	return *this;
 }
 
 Menu& Menu::toggle(bool *b) {
@@ -556,6 +566,7 @@ Menu& Menu::editColor(Color* color, bool editAlpha, Function onChangeCallback) {
 		changeSubmenu(nullptr);
 		colorEditing = true;
 	}
+	return *this;
 }
 void Menu::colorEditor() {
 	banner("Color Editor");

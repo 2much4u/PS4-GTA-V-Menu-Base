@@ -1,0 +1,10 @@
+services:
+  builder:
+    build: .
+    image: ps4-sdk-builder
+    platform: linux/amd64
+    volumes:
+      - .:/ps4-gta-v-menu-base
+    working_dir: /ps4-gta-v-menu-base
+    stdin_open: true
+    tty: true

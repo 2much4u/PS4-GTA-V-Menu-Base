@@ -1,0 +1,11 @@
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Build with PS4 Payload SDK
+        uses: themonsterdev/ps4-payload-sdk
+        with:
+          app_path: .
+          build_command: make
