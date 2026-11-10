@@ -5,7 +5,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Build with PS4 Payload SDK
-        uses: themonsterdev/ps4-payload-sdk
+        uses: themonsterdev/ps4-payload-sdk@fw-14.00-gtav-1.57
         with:
           app_path: .
           build_command: make
