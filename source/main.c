@@ -1,15 +1,10 @@
 #include "ps4.h"
-#include "kern.h"
-#include "proc.h"
 #include "gta.h"
 
 extern char gtaPayload[];
 extern int gtaPayloadSize;
 
 int gamePID;
-
-double(*ceil)(double x);
-int(*sceSysUtilSendSystemNotificationWithText)(int messageType, char* message);
 
 void sysNotify(char* msg) {
 	sceSysUtilSendSystemNotificationWithText(222, msg);
@@ -24,15 +19,9 @@ BOOL gameCheck() {
 	BOOL success = FALSE;
 	switch (testBytes)
 	{
-	case GameCheck127Bytes:
-		sysNotify("1.27 GTA V detected.");
+	case GameCheckEUBytes:
+		sysNotify("1.57 EU GTA V detected.\nThis payload can only be used on 1.57 GTA V.");
 		success = TRUE;
-		break;
-	case GameCheck100USBytes:
-		sysNotify("1.00 US GTA V detected.\nThis payload can only be used on 1.27 GTA V.");
-		break;
-	case GameCheck100EUBytes:
-		sysNotify("1.00 EU GTA V detected.\nThis payload can only be used on 1.27 GTA V.");
 		break;
 	default:
 		sysNotify("Failed to detect GTA V.");
@@ -42,39 +31,50 @@ BOOL gameCheck() {
 	procDetach(gamePID);
 	return success;
 }
-BOOL setupDone() {
-	procAttach(gamePID);
-
-	BOOL allocationNeeded;
-	procReadBytes(gamePID, &gtaVars->allocationNeeded, &allocationNeeded, sizeof(allocationNeeded));
-
-	procDetach(gamePID);
-	return !allocationNeeded;
-}
 
 void runSetup() {
 	procAttach(gamePID);
 
-	BOOL allocationNeeded = TRUE;
-	procWriteBytes(gamePID, &gtaVars->allocationNeeded, &allocationNeeded, sizeof(allocationNeeded));
-
+	// gtaVars
 	void* null = NULL;
-	procWriteBytes(gamePID, &gtaVars->executableSpace, &null, sizeof(null));
-	procWriteBytes(gamePID, &gtaVars->dataSpace, &null, sizeof(null));
+	struct _gtaVars _gtaVars;
+	_gtaVars.allocationNeeded = TRUE;
+	_gtaVars.allocationSize   = (int)ceil((double)gtaPayloadSize / 0x4000) * 0x4000;
+	_gtaVars.executableSpace  = null;
+	_gtaVars.dataSpace        = null;
+	procWriteBytes(gamePID, gtaVars, &_gtaVars, sizeof(_gtaVars));
 
-	int executableSize = (int)ceil((double)gtaPayloadSize / 0x4000) * 0x4000;
-	procWriteBytes(gamePID, &gtaVars->allocationSize, &executableSize, sizeof(executableSize));
-
+	// nativeHook
 	procWriteBytes(gamePID, PayloadAddress, nativeHook, 0x1000);
 
+	// syscall
 	u8 syscallASM[] = { SyscallBytes };
 	procWriteBytes(gamePID, SyscallAddress, syscallASM, sizeof(syscallASM));
 
+	// hook (IS_PLAYER_ONLINE)
 	u8 hookASM[] = { HookBytes };
 	procWriteBytes(gamePID, HookAddress, hookASM, sizeof(hookASM));
 
 	procDetach(gamePID);
 }
+
+BOOL setupDone() {
+	procAttach(gamePID);
+
+	struct _gtaVars check;
+  	procReadBytes(gamePID, gtaVars, &check, sizeof(check));
+
+	if (!check.allocationNeeded) {
+		printf_debug("[setup_done] allocNeeded read=%d\n", check.allocationNeeded);
+		printf_debug("[setup_done] execSpace read=%p\n", check.executableSpace);
+		printf_debug("[setup_done] dataSpace read=%p\n", check.dataSpace);
+		printf_debug("[setup_done] allocSize read=0x%X\n", check.allocationSize);
+	}
+
+	procDetach(gamePID);
+	return !check.allocationNeeded;
+}
+
 void startExecution() {
 	procAttach(gamePID);
 
@@ -89,14 +89,11 @@ void startExecution() {
 int _main(void) {
 	initKernel();
 	initLibc();
+	initSysUtil();
 
-	kexec(kernelPayload, NULL);
-
-	int libc = sceKernelLoadStartModule("libSceLibcInternal.sprx", 0, NULL, 0, 0, 0);
-	RESOLVE(libc, ceil);
-
-	int sysUtil = sceKernelLoadStartModule("/system/common/lib/libSceSysUtil.sprx", 0, NULL, 0, 0, 0);
-	RESOLVE(sysUtil, sceSysUtilSendSystemNotificationWithText);
+	jailbreak();
+	ptrace_patch();
+	disable_aslr();
 
 	sysNotify("Payload loaded.\nPlease launch GTA V.");
 	gamePID = findProcess("eboot.bin");

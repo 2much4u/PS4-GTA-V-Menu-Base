@@ -1,6 +1,7 @@
 #include "lib.h"
 
-u64 (*syscall)(int num, ...) = (void*)0x31B616C;
+#define SyscallAddress (void*)0x32B9438
+u64 (*syscall)(int num, ...) = SyscallAddress;
 #define resolve(module, name) syscall(591, module, #name, &name);
 
 void *(*malloc)(size_t size);
